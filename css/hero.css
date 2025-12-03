@@ -1,0 +1,33 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+#hero{
+  display: flex;
+  flex-direction: column;
+}
+
+#hero-img{
+ width: 94vw;
+ margin-left: 3vw;
+ 
+}
+.intro{
+  position: relative;
+   width: 94vw;
+ margin-left: 3vw;
+ padding-left: 2vw;
+ border-left: 1px solid black;
+ padding-top: 5vh;
+ padding-bottom: 2vh;
+}
+
+#banner{
+  position: absolute;
+  right:10vw;
+  top: 10vh;
+  height: 25vh;
+  width: 30vw;
+  background-color: aqua;
+}
