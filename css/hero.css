@@ -25,10 +25,10 @@
 
 #banner{
   position: absolute;
-  right:9vw;
+  right:7.5vw;
   top: 15vh;
   height: 25vh;
-  width: 33vw;
+  width: 35vw;
   background-color: aqua;
 }
 .intro h1{
