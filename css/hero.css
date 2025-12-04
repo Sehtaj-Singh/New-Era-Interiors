@@ -27,7 +27,7 @@
   position: absolute;
   right:7.5vw;
   top: 15vh;
-  height: 25vh;
+  height: 27vh;
   width: 37vw;
   background-color: aqua;
 }
@@ -38,3 +38,33 @@
   padding-bottom: 1vh;
   width: 45vw;
 }
+
+#title{
+  font-size: 4vh;
+  padding-left: 5vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+#welcome-side{
+  width: 60vw;
+  background-color: aqua;
+  height: 6vh;
+  position: absolute;
+  right: 0;
+}
+#welcome-section{
+  position: relative;
+}
+.welcome-para div{
+  width: 30vw;
+  margin-right: 15vw;
+}
+.welcome-para{
+  margin-top: 10vh;
+  display: flex;
+}
+.welcome-para p{
+  width: 50vw;
+  text-align: center;
+}
+
