@@ -17,7 +17,7 @@
   position: relative;
    width: 94vw;
  margin-left: 3vw;
- padding-left: 2vw;
+ padding-left: 5vw;
  border-left: 1px solid black;
  padding-top: 5vh;
  padding-bottom: 2vh;
@@ -25,9 +25,16 @@
 
 #banner{
   position: absolute;
-  right:10vw;
-  top: 10vh;
+  right:9vw;
+  top: 15vh;
   height: 25vh;
-  width: 30vw;
+  width: 33vw;
   background-color: aqua;
+}
+.intro h1{
+  padding-bottom: 2vh;
+}
+#her0-sub-title{
+  padding-bottom: 1vh;
+  width: 52vw;
 }
