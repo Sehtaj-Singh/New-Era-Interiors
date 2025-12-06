@@ -5,9 +5,13 @@
   font-family: var(--font-title);
   letter-spacing: 2px;
   font-size: 4vh;
-  padding-left: 5vw;
+  margin-left: 5vw;
+  padding-left: 1vw;
+  padding-right: 3vw;
   margin-top: 2vh;
+  display: inline-block ;
   margin-bottom: 2vh;
+  border-bottom:1px solid #2c2d31 ;
 }
 
 /* top welcome block */
@@ -42,6 +46,7 @@
 .welcome-main-text h3 {
   text-align: center;
   width:100%;
+  font-weight: 400;
   font-family: var(--font-body);
 }
 
@@ -80,6 +85,10 @@
     #34363b 60%,
     #3a3b3f 100%
   );
+  padding: 1vh 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .welcome-image {
@@ -97,5 +106,32 @@
   width: 80vw;
   margin-left: 10vw;
   text-align: center;
+  font-size: 2.2vh;
+  margin-top: 2vh;
+  font-family: var(--font-subtitle);
+}
+.w-down-points{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1vh;
+  justify-content: center;
+}
+#w-down-banner-text{
+  color: #fff;
   font-family: var(--font-body);
+  text-align: center;
+  font-size: 2vh;
+  
+}
+.w-down-points img{
+  width: 8vw;
+}
+.w-down-points h4{
+  color: #fff;
+  font-size: 1.8vh;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 400;
+  width: 38vw;
 }

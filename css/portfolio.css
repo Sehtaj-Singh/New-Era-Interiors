@@ -11,13 +11,30 @@
 
 #portfolio-first {
   display: flex;
+  margin-bottom: 2vh;
+}
+
+.portfolio-text h4{
+  text-align: center;
+  font-family: var(--font-body);
+  color: #2c2d31;
+}
+.portfolio-text p{
+  text-align: center;
+  font-family: var(--font-subtitle);
+  color: #2c2d31;
 }
 
 /* text on left */
 .portfolio-text {
   width: 45vw;
   margin-left: 3vw;
-  font-family: var(--font-body);
+  margin-right: 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  
 }
 
 /* image on right */
