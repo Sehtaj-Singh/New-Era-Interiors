@@ -95,7 +95,8 @@ font-size: 1.8vh;
   margin-bottom: 2vh;
 }
 #welcome-side {
-  width: 65vw;
+  width:52vw;
+  margin-left: 8vw;
 background: linear-gradient(
   to right,
   #2c2d31 0%,
