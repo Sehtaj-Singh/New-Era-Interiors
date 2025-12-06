@@ -1,0 +1,97 @@
+/* css/welcome.css */
+
+/* main "Welcome" title */
+#title {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+  font-size: 4vh;
+  padding-left: 5vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+/* top welcome block */
+#welcome-main {
+  display: flex;
+  flex-direction: column;
+}
+
+/* banner with bg image and text */
+.welcome-main-banner {
+  display: flex;
+  flex-direction: column;
+  width: 100vw; 
+  aspect-ratio: 718/565;
+  background: url("../assets/b.png") center/cover no-repeat;
+  position: relative;
+  margin-bottom: 3vh;
+}
+
+.welcome-main-banner h3 {
+  position: absolute;
+  top: 2vh;
+  text-align: right;
+  right: 0vw;
+  font-size: 2.5vh;
+  padding-right: 3vw;
+  width:50%;
+  font-family: var(--font-body);
+}
+
+.welcome-main-banner p {
+  position: absolute;
+  right: 3vw;
+  top: 20vh;
+  width: 40%;
+  text-align: right;
+  font-size: 16px;
+  font-family: var(--font-subtitle);
+}
+
+/* image on right under welcome */
+.welcome-main-img {
+  width: 90vw;
+  margin-left: 5vw;
+  margin-bottom: 3vh;
+}
+
+.welcome-main-img img {
+  width: 100%;
+}
+
+/* Welcome-down section */
+#w-down-grid {
+  display: flex;
+  height: 45vh;
+}
+
+#w-down-banner {
+  width: 45vw;
+  height: 100%;
+  margin-right: 4vw;
+  margin-left: 3vw;
+  background: linear-gradient(
+    to right,
+    #2c2d31 0%,
+    #34363b 60%,
+    #3a3b3f 100%
+  );
+}
+
+.welcome-image {
+  width: 45vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.welcome-image img {
+  width: 100%;
+}
+
+.w-down-para p {
+  width: 80vw;
+  margin-left: 10vw;
+  text-align: center;
+  font-family: var(--font-body);
+}

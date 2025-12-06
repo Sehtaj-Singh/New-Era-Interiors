@@ -1,0 +1,36 @@
+/* css/global.css */
+
+/* FONT VARIABLES */
+:root {
+  --font-title: "Cinzel", serif;
+  --font-subtitle: "Cormorant Garamond", serif;
+  --font-body: "Work Sans", sans-serif;
+
+  --color-main: #2c2d31;
+  --color-main-soft: #2c2d31ae;
+  --color-light-grey: #f3f3f3;
+  --color-white: #ffffff;
+}
+
+/* RESET + BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-main);
+}
+
+/* generic section headings (you can reuse) */
+section h2 {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+}
+
+/* TEMP image (used in Service + Journey) */
+#temp {
+  width: 80vw;
+}

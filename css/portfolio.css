@@ -1,0 +1,36 @@
+/* css/portfolio.css */
+
+#portfolio h2 {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+  font-size: 4vh;
+  padding-left: 5vw;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
+}
+
+#portfolio-first {
+  display: flex;
+}
+
+/* text on left */
+.portfolio-text {
+  width: 45vw;
+  margin-left: 3vw;
+  font-family: var(--font-body);
+}
+
+/* image on right */
+.portfolio-image {
+  width: 45vw;
+}
+
+.portfolio-image img {
+  width: 100%;
+}
+
+/* slider image below */
+.slider img {
+  width: 90vw;
+  margin-left: 5vw;
+}

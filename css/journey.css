@@ -1,0 +1,11 @@
+/* css/journey.css */
+
+#journey h2 {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+  padding-left: 5vw;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
+}
+
+/* #temp image width is handled by global.css */

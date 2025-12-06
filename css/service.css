@@ -1,0 +1,31 @@
+/* css/service.css */
+
+#service h2 {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+  padding-left: 5vw;
+  margin-top: 3vh;
+}
+
+/* container: icons + text */
+#servide-title {
+  display: flex;
+}
+
+/* icons group */
+.servide-icon {
+  width: 40vw;
+  display: flex;
+  align-items: center;
+}
+
+.servide-icon img {
+  width: 8vw;
+  height: 8vw;
+}
+
+/* paragraph on right */
+.service-para p {
+  width: 50vw;
+  font-family: var(--font-body);
+}

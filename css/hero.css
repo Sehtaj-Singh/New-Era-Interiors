@@ -1,14 +1,4 @@
-:root {
-  /* FONT FAMILIES */
-  --font-title: "Cinzel", serif;
-  --font-subtitle: "Cormorant Garamond", serif;
-  --font-body: "Work Sans", sans-serif;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
+/* css/hero.css */
 
 #hero {
   display: flex;
@@ -19,178 +9,71 @@
   width: 94vw;
   margin-left: 3vw;
 }
+
 .intro {
   position: relative;
   width: 89vw;
   margin-left: 3vw;
   padding-left: 5vw;
-  border-left: 1px solid #2c2d31ae;
+  border-left: 1px solid var(--color-main-soft);
   padding-top: 5vh;
   padding-bottom: 2vh;
 }
+
 .intro h1 {
   font-family: var(--font-title);
   letter-spacing: 2px;
-  color: #2c2d31;
+  color: var(--color-main);
+  padding-bottom: 2vh;
 }
 
+#her0-sub-title {
+  padding-bottom: 1vh;
+  width: 45vw;
+  font-family: var(--font-subtitle);
+  font-weight: 600;
+  font-size: 2.1vh;
+}
+
+/* Hero banner */
 #banner {
   position: absolute;
   right: 3vw;
   top: 16vh;
   height: 26vh;
   width: 35vw;
-background: linear-gradient(
-  to right,
-  #2c2d31 0%,
-  #34363b 60%,
-  #3a3b3f 100%
-);
-padding: 1vh 2vw;
-display: flex;
-flex-direction: column;
-justify-content: space-evenly;
-}
-#banner-head{
-color: #fff;
-font-family: var(--font-body);
-font-weight: 400;
-text-align: left;
-font-size: 2vh;
-}
-#banner-text{
-color: #fff;
-font-weight: 400;
-font-family: var(--font-body);
-text-align: left;
-font-size: 1.8vh;
-}
-#banner-para{
-color: #fff;
-font-weight: 400;
-font-family: var(--font-body);
-text-align: left;
-font-size: 1.8vh;
-}
-
-.intro h1 {
-  padding-bottom: 2vh;
-}
-#her0-sub-title {
-  padding-bottom: 1vh;
-  width: 45vw;
-  font-family: var(--font-subtitle);
-  
-  font-weight: 600;
-  font-size: 2.1vh;
-  
-}
-
-#title {
-  font-family: var(--font-title);
-  letter-spacing: 2px;
-  font-size: 4vh;
-  padding-left: 5vw;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
-}
-
-
-
-#welcome-main{
+  background: linear-gradient(
+    to right,
+    #2c2d31 0%,
+    #34363b 60%,
+    #3a3b3f 100%
+  );
+  padding: 1vh 2vw;
   display: flex;
   flex-direction: column;
-}
-.welcome-main-img{
-  width: 75vw;
-  margin-left: 12.5vw;
-  margin-bottom: 3vh;
-}
-.welcome-main-banner{
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  aspect-ratio: 804/554;
-  background: url("../assets/b.png") center/cover no-repeat;
-  position: relative;
-  margin-bottom: 3vh;
-}
-.welcome-main-img img{
-width: 100%;
-}
-.welcome-main-banner h3 {
-  position: absolute;
-  top: 3vh;
-  right: 7vw;
+  justify-content: space-evenly;
 }
 
-
-.welcome-main-banner p {
- position: absolute;
- right: 3vw;
- bottom: 3vh;
- width: 45%;
- font-size: 13px;
+#banner-head {
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 400;
+  text-align: left;
+  font-size: 2vh;
 }
 
-.welcome-image img {
-  width: 100%;
-}
-#w-down-banner {
-  width: 45vw;
-  height: 100%;
-  margin-right: 4vw;
-  background-color: aqua;
-}
-.welcome-image {
-  width: 45vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-#w-down-grid {
-  display: flex;
-  height: 45vh;
-}
-.w-down-para p {
-  width: 80vw;
-  margin-left: 10vw;
-  text-align: center;
-}
-#portfolio-first {
-  display: flex;
-}
-.portfolio-image {
-  width: 45vw;
-}
-.portfolio-image img {
-  width: 100%;
-}
-.portfolio-text {
-  width: 45vw;
-  margin-left: 3vw;
+#banner-text {
+  color: #fff;
+  font-weight: 400;
+  font-family: var(--font-body);
+  text-align: left;
+  font-size: 1.8vh;
 }
 
-.slider img {
-  width: 90vw;
-  margin-left: 5vw;
-}
-
-#servide-title {
-  display: flex;
-}
-.servide-icon {
-  width: 40vw;
-  display: flex;
-  align-items: center;
-}
-.servide-icon img {
-  width: 8vw;
-  height: 8vw;
-}
-.service-para p {
-  width: 50vw;
-}
-#temp {
-  width: 80vw;
+#banner-para {
+  color: #fff;
+  font-weight: 400;
+  font-family: var(--font-body);
+  text-align: left;
+  font-size: 1.8vh;
 }
