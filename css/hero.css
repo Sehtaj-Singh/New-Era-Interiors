@@ -111,7 +111,7 @@ font-size: 1.8vh;
   flex-direction: column;
   width: 100vw;
   aspect-ratio: 804/554;
-  background: url("/newEraInteriors/assets/b.png") center/cover no-repeat;
+  background: url("/assets/b.png") center/cover no-repeat;
   position: relative;
 }
 .welcome-main-img img{
