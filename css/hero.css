@@ -94,42 +94,37 @@ font-size: 1.8vh;
   margin-top: 2vh;
   margin-bottom: 2vh;
 }
-#welcome-side {
-  width:52vw;
-  margin-left: 8vw;
-background: linear-gradient(
-  to right,
-  #2c2d31 0%,
-  #34363b 60%,
-  #3a3b3f 100%
-);
-  height: 7vh;
- 
- 
-}
-#welcome-section {
-  position: relative;
-}
+
+
+
 #welcome-main{
   display: flex;
+  flex-direction: column;
 }
 .welcome-main-img{
-  width: 40vw;
+  width: 75vw;
+  margin-left: 12.5vw;
   
 }
-#welcome-main-banner{
+.welcome-main-banner{
   display: flex;
   flex-direction: column;
-  width: 60vw;
+  width: 100vw;
+  aspect-ratio: 804/554;
+  background: url("/newEraInteriors/assets/b.png") center/cover no-repeat;
+  position: relative;
 }
 .welcome-main-img img{
 width: 100%;
 }
 
 
-.welcome-para p {
-  width: 50vw;
-  text-align: center;
+.welcome-main-banner p {
+ position: absolute;
+ right: 3vw;
+ bottom: 3vh;
+ width: 45%;
+ font-size: 13px;
 }
 
 .welcome-image img {
