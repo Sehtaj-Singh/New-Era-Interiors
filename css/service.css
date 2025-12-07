@@ -89,3 +89,122 @@ display: flex;
 
 /* when we are animating between slides, JS sets opacity directly */
 
+/* css/service.css */
+
+/* --- Pinning and Virtual Scroll Setup --- */
+
+/* NEW: The wrapper creates the scroll space that the section is pinned over */
+#service-scroll-wrapper {
+  /* This height is set dynamically by JavaScript */
+}
+
+/* This is the section that pins to the top */
+#service {
+  min-height: 100vh;
+  position: sticky; /* Key for pinning */
+  top: 6vh; /* The point where the service section stops scrolling */
+  width: 100%;
+}
+
+
+#service h2 {
+  font-family: var(--font-title);
+  letter-spacing: 2px;
+  padding-left: 5vw;
+  margin-top: 3vh;
+}
+
+/* Container that holds all slides */
+#service-container {
+  position: relative;
+  /* Ensure the container takes up the full space needed for content (100vh - h2 and margins) */
+  min-height: calc(100vh - 12vh); 
+  margin-top: 2vh;
+  margin-bottom: 7vh;
+  overflow: hidden;
+}
+
+/* --- Slide and Data Layout Fixes --- */
+
+.service-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%; 
+  align-items: center; 
+  gap: 3vh;
+
+  opacity: 0;
+  pointer-events: none;
+  /* Use a slow transition speed to make the fade smooth */
+  transition: opacity 0.5s linear; 
+}
+
+.service-slide.is-current {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.service-data{
+  /* Revised width for better fit */
+  width: 90%; 
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 5vw; 
+}
+
+.service-data h3{
+  text-align: right;
+  margin: 1vh 2vw;
+}
+.service-data p{
+  text-align: right;
+  margin: 1vh 2vw;
+}
+
+.service-logo{
+  display: flex;
+  justify-content: right;
+}
+
+.service-logo img{
+  width: 8vw;
+}
+
+/* --- Image and Button Fixes --- */
+.service-images{
+  /* Fixed width relative to viewport, remove gap caused by margin/float */
+  width: 70vw; 
+  max-width: 400px; /* Optional cap */
+  position: relative;
+  /* The background image is what was causing the gap if not sized */
+  background: url("../assets/r1.jpg")center/cover no-repeat ;
+  aspect-ratio: 2093/2555;
+  margin-bottom: 5vh; 
+  align-self: center; /* Center the image within the flex column */
+}
+
+.service-image-buttons{
+  position: absolute;
+  right: 0; 
+  bottom: 5%; 
+  display: flex;
+  transform: translateX(100%); /* Move the buttons completely off the right edge */
+}
+
+#button-left{
+  background-color: #fff;
+  padding: 1vh 2vw;
+  font-size: 4vw;
+}
+
+#button-right{
+  width: 8vw;
+  background-color: black;
+  color: #fff;
+  padding: 1vh 2vw;
+  font-size: 4vw;
+}
