@@ -1,184 +1,186 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ---------------- HEADER FADE ---------------- */
+  initHeaderFade();
+  initServiceSlider();
+});
+
+/* ---------------- HEADER FADE ---------------- */
+
+function initHeaderFade() {
   const header = document.getElementById("site-header");
   const heroTitle = document.querySelector(".intro h1");
 
-  if (header && heroTitle) {
-    const titleTop = heroTitle.offsetTop;
-    const titleHeight = heroTitle.offsetHeight;
-    const maxScroll = titleTop + titleHeight;
+  if (!header || !heroTitle) return;
 
-    function handleHeaderScroll() {
-      const scrolled = window.scrollY || window.pageYOffset;
+  const titleTop = heroTitle.offsetTop;
+  const titleHeight = heroTitle.offsetHeight;
+  const maxScroll = titleTop + titleHeight;
 
-      let progress = scrolled / maxScroll;
-      if (progress < 0) progress = 0;
-      if (progress > 1) progress = 1;
+  function handleHeaderScroll() {
+    const scrolled = window.scrollY || window.pageYOffset;
 
-      header.style.opacity = progress;
-      header.style.pointerEvents = progress > 0 ? "auto" : "none";
-      heroTitle.style.opacity = 1 - progress;
-    }
+    let progress = scrolled / maxScroll;
+    if (progress < 0) progress = 0;
+    if (progress > 1) progress = 1;
 
-    window.addEventListener("scroll", handleHeaderScroll);
-    handleHeaderScroll();
+    header.style.opacity = progress;
+    header.style.pointerEvents = progress > 0 ? "auto" : "none";
+    heroTitle.style.opacity = 1 - progress;
   }
 
-  /* ---------------- SERVICE VERTICAL SLIDER ---------------- */
+  window.addEventListener("scroll", handleHeaderScroll);
+  handleHeaderScroll();
+}
 
+/* ---------------- SERVICE SCROLL SLIDER ---------------- */
+
+function initServiceSlider() {
   const serviceSection = document.getElementById("service");
-  if (!serviceSection) return;
+  const serviceContainer = document.getElementById("service-container");
+  if (!serviceSection || !serviceContainer) return;
 
-  const serviceTitle = serviceSection.querySelector(".service-data h3");
-  const serviceText = serviceSection.querySelector(".service-data p");
-  const serviceImageWrapper = serviceSection.querySelector(".service-images");
+  const slides = Array.from(
+    serviceContainer.querySelectorAll(".service-slide")
+  );
+  if (!slides.length) return;
 
-  if (!serviceTitle || !serviceText || !serviceImageWrapper) return;
+  const totalSlides = slides.length;
+  let currentIndex = 0;
+  let direction = 0; // 1 = down/next, -1 = up/prev
+  let progress = 0; // 0..1 for current transition
 
-  // Your 3 states (same image r1 for now – you can change later)
-  const serviceSlides = [
-    {
-      title: "Fitted Kitchen",
-      text: "Thoughtfully designed modular kitchens that balance function and clean aesthetics, tailored precisely to your space.",
-      image: "assets/r1.jpg",
-    },
-    {
-      title: "Custom Wardrobes",
-      text: "Smart storage wardrobes with strong structure, smooth finishes and layouts that make everyday use easy.",
-      image: "assets/r1.jpg",
-    },
-    {
-      title: "Comfort Bedrooms",
-      text: "Calm, comfortable bedroom designs built around warm materials, simple lines and practical details.",
-      image: "assets/r1.jpg",
-    },
-  ];
+  // show first slide
+  slides.forEach((slide, idx) => {
+    if (idx === 0) {
+      slide.classList.add("is-current");
+      slide.style.opacity = 1;
+      slide.style.pointerEvents = "auto";
+    } else {
+      slide.style.opacity = 0;
+      slide.style.pointerEvents = "none";
+    }
+  });
 
-  let currentSlide = 0;
-  const totalSlides = serviceSlides.length;
-  let lastSlideChange = 0;
-  const slideCooldown = 500; // ms between slide changes
-
-  // Initialize background image (in case CSS is different)
-  serviceImageWrapper.style.backgroundImage = `url("${serviceSlides[0].image}")`;
-
-  function applySlide(index) {
-    const slide = serviceSlides[index];
-    serviceTitle.textContent = slide.title;
-    serviceText.textContent = slide.text;
-    serviceImageWrapper.style.backgroundImage = `url("${slide.image}")`;
-  }
-
-  function animateToSlide(nextIndex) {
-    if (nextIndex === currentSlide) return;
-
-    const dataBlock = serviceSection.querySelector(".service-data");
-    const imageBlock = serviceSection.querySelector(".service-images");
-    if (!dataBlock || !imageBlock) return;
-
-    dataBlock.classList.add("service-transition-out");
-    imageBlock.classList.add("service-transition-out");
-
-    setTimeout(() => {
-      currentSlide = nextIndex;
-      applySlide(currentSlide);
-      dataBlock.classList.remove("service-transition-out");
-      imageBlock.classList.remove("service-transition-out");
-    }, 200);
-  }
-
-  // Helper to check if service section is mostly in view
-  function isServiceInFocus() {
+  /**
+   * Checks if the service section is in the viewport, allowing scroll-jacking.
+   * Increased the range to make the scroll stop more reliable.
+   */
+  function isServiceInView() {
     const rect = serviceSection.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
-
-    const topIn = rect.top <= vh * 0.3;
-    const bottomIn = rect.bottom >= vh * 0.4;
-
-    return topIn && bottomIn;
+    // Section starts within 80% from top and ends within 80% from bottom
+    return rect.top < vh * 0.8 && rect.bottom > vh * 0.2;
   }
 
-  // Wheel (mouse scroll) handling – vertical step slider
-  serviceSection.addEventListener(
-    "wheel",
-    (event) => {
-      if (!isServiceInFocus()) return;
+  function setSlideOpacities() {
+    // reset current state before setting new opacities
+    slides.forEach((slide) => {
+      slide.style.opacity = 0;
+      slide.style.pointerEvents = "none";
+      slide.classList.remove("is-current");
+    });
 
-      const now = Date.now();
-      if (now - lastSlideChange < slideCooldown) {
-        event.preventDefault();
-        return;
+    if (direction === 0) {
+      // No transition in progress, show current slide fully
+      const slide = slides[currentIndex];
+      slide.style.opacity = 1;
+      slide.style.pointerEvents = "auto";
+      slide.classList.add("is-current");
+      return;
+    }
+
+    const from = currentIndex;
+    const to = currentIndex + direction;
+
+    const fromOpacity = 1 - progress;
+    const toOpacity = progress;
+
+    if (slides[from]) {
+      slides[from].style.opacity = fromOpacity;
+      slides[from].style.pointerEvents = fromOpacity > 0.01 ? "auto" : "none";
+      if (fromOpacity > 0.5) slides[from].classList.add("is-current");
+    }
+
+    if (slides[to]) {
+      slides[to].style.opacity = toOpacity;
+      slides[to].style.pointerEvents = toOpacity > 0.01 ? "auto" : "none";
+      if (toOpacity > 0.5) slides[to].classList.add("is-current");
+    }
+  }
+
+  function commitSlide(newIndex) {
+    currentIndex = newIndex;
+    progress = 0;
+    direction = 0;
+
+    slides.forEach((slide, idx) => {
+      slide.classList.remove("is-current");
+      if (idx === currentIndex) {
+        slide.style.opacity = 1;
+        slide.style.pointerEvents = "auto";
+        slide.classList.add("is-current");
+      } else {
+        slide.style.opacity = 0;
+        slide.style.pointerEvents = "none";
       }
+    });
+  }
 
-      const delta = event.deltaY;
+  function handleWheel(e) {
+    const isInView = isServiceInView();
 
-      // Scroll down → next slide
-      if (delta > 0) {
-        if (currentSlide < totalSlides - 1) {
-          event.preventDefault();
-          animateToSlide(currentSlide + 1);
-          lastSlideChange = now;
-        }
-        // else: last slide, allow normal scroll to Journey
+    // Condition 1: If we are not in view AND not in the middle of a transition, allow normal scroll.
+    if (!isInView && direction === 0) {
+      return;
+    }
+
+    const delta = e.deltaY;
+    if (delta === 0) return;
+
+    // Condition 2: Allow scroll to escape the section boundary if at the start/end.
+    // At first slide going UP -> allow normal scroll
+    if (delta < 0 && currentIndex === 0 && direction === 0) return;
+    // At last slide going DOWN -> allow normal scroll
+    if (delta > 0 && currentIndex === totalSlides - 1 && direction === 0)
+      return;
+
+    // If we've reached this point, we are controlling the scroll inside the service section:
+    e.preventDefault();
+
+    // Adjusted step: A smaller number requires more scroll delta for the progress to reach 1.
+    // This makes the transition slower/requires more scroll input.
+    const scrollSensitivity = 800; // Increase this value to require more scroll
+    const step = Math.min(Math.abs(delta) / scrollSensitivity, 1); // Clamp step to max 1
+
+    // set direction when starting a new transition
+    if (direction === 0) {
+      if (delta > 0 && currentIndex < totalSlides - 1) {
+        direction = 1; // Down/Next
+      } else if (delta < 0 && currentIndex > 0) {
+        direction = -1; // Up/Previous
+      } else {
+        return; // No valid transition direction
       }
+    }
 
-      // Scroll up → previous slide
-      if (delta < 0) {
-        if (currentSlide > 0) {
-          event.preventDefault();
-          animateToSlide(currentSlide - 1);
-          lastSlideChange = now;
-        }
-        // else: first slide, allow scroll back to Portfolio
+    progress += step;
+    
+    // Check if transition is complete (progress >= 1). Snap to the next slide.
+    if (progress >= 1) {
+      const nextIndex = currentIndex + direction;
+      // Ensure nextIndex is within bounds before committing
+      if (nextIndex >= 0 && nextIndex < totalSlides) {
+        commitSlide(nextIndex);
+      } else {
+        // If we somehow went out of bounds, reset the transition state
+        direction = 0;
+        progress = 0;
+        setSlideOpacities(); // Refresh the display
       }
-    },
-    { passive: false }
-  );
+    } else {
+      // If transition is not complete, update opacities based on progress.
+      setSlideOpacities();
+    }
+  }
 
-  // Basic touch support (swipe up/down) for mobile
-  let touchStartY = null;
-
-  serviceSection.addEventListener(
-    "touchstart",
-    (e) => {
-      if (!isServiceInFocus()) return;
-      touchStartY = e.touches[0].clientY;
-    },
-    { passive: true }
-  );
-
-  serviceSection.addEventListener(
-    "touchend",
-    (e) => {
-      if (touchStartY === null || !isServiceInFocus()) return;
-
-      const endY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY - endY;
-      const now = Date.now();
-
-      if (Math.abs(deltaY) < 30) {
-        touchStartY = null;
-        return;
-      }
-      if (now - lastSlideChange < slideCooldown) {
-        touchStartY = null;
-        return;
-      }
-
-      // Swipe up (finger moves up -> user scrolling down)
-      if (deltaY > 0 && currentSlide < totalSlides - 1) {
-        animateToSlide(currentSlide + 1);
-        lastSlideChange = now;
-      }
-
-      // Swipe down (finger moves down -> user scrolling up)
-      if (deltaY < 0 && currentSlide > 0) {
-        animateToSlide(currentSlide - 1);
-        lastSlideChange = now;
-      }
-
-      touchStartY = null;
-    },
-    { passive: true }
-  );
-});
+  window.addEventListener("wheel", handleWheel, { passive: false });
+}

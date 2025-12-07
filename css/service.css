@@ -42,27 +42,49 @@ display: flex;
 }
 .service-data h3{
   text-align: right;
+  margin: 1vh 2vw;
 }
 .service-data p{
   text-align: right;
+  margin: 1vh 2vw;
 }
 .service-data{
   width: 80vw;
   margin-left: 20vw;
 }
 
-/* Make the whole service section at least 100vh high */
+/* Full viewport height for service area */
 #service {
-  min-height: 100vh;
+  
+  position: relative;
 }
 
-/* Smooth fade/slide when switching slides */
-.service-data,
-.service-images {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+/* Container that holds all slides */
+#service-container {
+  position: relative;
+  min-height: calc(100vh - 6vh); /* a bit less than full to account for header */
+  margin-top: 2vh;
+  overflow: hidden;
 }
 
-.service-transition-out {
+/* Each slide uses your same layout (data + image stacked) */
+.service-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3vh;
+
   opacity: 0;
-  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.25s linear;
 }
+
+/* default visible slide */
+.service-slide.is-current {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* when we are animating between slides, JS sets opacity directly */
