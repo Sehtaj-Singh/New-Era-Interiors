@@ -39,11 +39,12 @@ font-size: 3vh;
   font-family: var(--font-title);
   letter-spacing: 2px;
   color: var(--color-main);
-  padding-bottom: 2vh;
+  padding-bottom: 1vh;
+  color: #2c2d31;
 }
 
 #her0-sub-title {
-  padding-bottom: 1vh;
+  
   width: 45vw;
   color: #2c2d31db;
   font-family: var(--font-subtitle);
@@ -120,4 +121,85 @@ font-size: 3vh;
   font-size: 1.8vh;
   font-family: var(--font-body);
   color: #2c2d319d;
+}
+
+/* ---------- HEADER SCROLL FADE ---------- */
+
+header#site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0; /* controlled by JS */
+  background: rgba(44, 45, 49, 0); /* fully transparent at top */
+  transition:
+    opacity 0.2s linear,
+    background-color 0.2s linear;
+}
+
+header#site-header.header-visible {
+  opacity: 1;
+  background: rgba(44, 45, 49, 0.96);
+  pointer-events: auto;
+}
+
+.header-inner {
+  width: 100%;
+  padding: 0 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}
+
+.header-logo-box {
+  width: 4.2vh;
+  height: 4.2vh;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 2vh;
+  color: #fff;
+}
+
+.header-brand {
+  font-family: var(--font-title);
+  font-size: 2vh;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Bars button */
+.header-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.header-menu-btn i {
+  font-size: 3vh;
+  color: #fff;
+}
+
+/* Title fade controlled by JS */
+.intro h1 {
+  transition: opacity 0.2s linear;
+}
+.intro h1.title-fade {
+  opacity: 0;
 }
