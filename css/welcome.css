@@ -46,12 +46,14 @@
 .welcome-main-text h3 {
   text-align: center;
   width:100%;
+  color: #2c2d31d0;
   font-family: var(--font-body);
 }
 
 .welcome-main-banner p {
   width: 100%;
   text-align: center;
+  color: #2c2d31;
   font-size: 16px;
   font-family: var(--font-subtitle);
 }
@@ -75,6 +77,7 @@
 
 #w-down-banner {
   width: 45vw;
+  position: relative;
   height: 100%;
   margin-right: 4vw;
   margin-left: 3vw;
@@ -95,7 +98,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.08; /* adjust grain strength */
+  opacity: 0.4; /* adjust grain strength */
 
   background-image: 
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -119,7 +122,7 @@
   font-size: 2.2vh;
   line-height: 1.5;
 
-  margin-top: 2vh;
+  margin-top: 4vh;
   font-family: var(--font-subtitle);
 }
 .w-down-points{
@@ -147,3 +150,4 @@
   font-weight: 400;
   width: 38vw;
 }
+

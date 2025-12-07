@@ -8,6 +8,21 @@
 #hero-img {
   width: 94vw;
   margin-left: 3vw;
+  aspect-ratio: 2830/3149;
+  background: url("../assets/q1.jpg") center/cover no-repeat ;
+  position: relative;
+}
+.hero-icons .social {
+color: #fff;
+font-size: 3vh;
+
+}
+.hero-icons{
+  position:absolute;
+  bottom: 2vh;
+  right: 5vw;
+  display: flex;
+  gap: 7vw;
 }
 
 .intro {
@@ -30,6 +45,7 @@
 #her0-sub-title {
   padding-bottom: 1vh;
   width: 45vw;
+  color: #2c2d31db;
   font-family: var(--font-subtitle);
   font-weight: 600;
   font-size: 2.1vh;
@@ -41,6 +57,7 @@
   right: 3vw;
   top: 16vh;
   height: 26vh;
+  z-index: 10;
   width: 35vw;
   background: linear-gradient(
     to right,
@@ -76,4 +93,30 @@
   font-family: var(--font-body);
   text-align: left;
   font-size: 1.8vh;
+}
+
+#stats-container{
+  display: flex;
+  margin-top: 3vh;
+  justify-content: space-evenly;
+}
+
+.stats{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7vh;
+}
+.stats h3{
+  font-size: 4vh;
+  color: #2c2d31c3;
+  font-family: var(--font-title);
+}
+
+.stats h5{
+  text-align: center;
+  font-size: 2.1vh;
+  font-family: var(--font-body);
+  color: #2c2d319d;
 }
