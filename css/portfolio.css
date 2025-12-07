@@ -7,16 +7,16 @@
   padding-left: 5vw;
   display: inline-block ;
   border-bottom: 1px solid #2c2d31e5;
-  margin-top: 3vh;
+  margin-top: 4vh;
    padding-left: 1vw;
   padding-right: 3vw;
-  margin-bottom: 2vh;
+  margin-bottom: 4vh;
   margin-left: 5vw;
 }
 
 #portfolio-first {
   display: flex;
-  margin-bottom: 2vh;
+  margin-bottom: 4vh;
 }
 
 .portfolio-text h3{

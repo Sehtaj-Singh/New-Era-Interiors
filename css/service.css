@@ -7,25 +7,62 @@
   margin-top: 3vh;
 }
 
-/* container: icons + text */
-#servide-title {
+.service-logo{
   display: flex;
+  justify-content: right;
 }
 
-/* icons group */
-.servide-icon {
-  width: 40vw;
-  display: flex;
-  align-items: center;
-}
-
-.servide-icon img {
+.service-logo img{
   width: 8vw;
-  height: 8vw;
+}
+.service-images{
+  width: 70vw;
+  position: relative;
+  background: url("../assets/r1.jpg")center/cover no-repeat ;
+  aspect-ratio: 2093/2555;
+}
+.service-image-buttons{
+position: absolute;
+right: -8vw;
+display: flex;
 }
 
-/* paragraph on right */
-.service-para p {
-  width: 50vw;
-  font-family: var(--font-body);
+#button-left{
+  background-color: #fff;
+  padding: 1vh 2vw;
+  font-size: 4vw;
+}
+
+#button-right{
+  width: 8vw;
+  background-color: black;
+  color: #fff;
+  padding: 1vh 2vw;
+  font-size: 4vw;
+}
+.service-data h3{
+  text-align: right;
+}
+.service-data p{
+  text-align: right;
+}
+.service-data{
+  width: 80vw;
+  margin-left: 20vw;
+}
+
+/* Make the whole service section at least 100vh high */
+#service {
+  min-height: 100vh;
+}
+
+/* Smooth fade/slide when switching slides */
+.service-data,
+.service-images {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.service-transition-out {
+  opacity: 0;
+  transform: translateY(10px);
 }
