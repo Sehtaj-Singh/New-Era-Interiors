@@ -19,7 +19,7 @@ font-size: 3vh;
 }
 .hero-icons{
   position:absolute;
-  bottom: 2vh;
+  bottom: 1vh;
   right: 5vw;
   display: flex;
   gap: 7vw;
@@ -109,14 +109,15 @@ font-size: 3vh;
   gap: 0.7vh;
 }
 .stats h3{
-  font-size: 4vh;
+  font-size: 3.5vh;
   color: #2c2d31c3;
+  letter-spacing: 1px;
   font-family: var(--font-title);
 }
 
 .stats h5{
   text-align: center;
-  font-size: 2.1vh;
+  font-size: 1.8vh;
   font-family: var(--font-body);
   color: #2c2d319d;
 }
