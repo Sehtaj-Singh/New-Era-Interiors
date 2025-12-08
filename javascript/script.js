@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initServiceSlider();
 });
 
-/* ---------------- HEADER FADE (KEPT AS IS) ---------------- */
+/* ---------------- HEADER FADE (Kept as is) ---------------- */
+
 function initHeaderFade() {
   const header = document.getElementById("site-header");
   const heroTitle = document.querySelector(".intro h1");
@@ -30,15 +31,13 @@ function initHeaderFade() {
   handleHeaderScroll();
 }
 
-
-/* ---------------- SERVICE SCROLL SLIDER (REVISED) ---------------- */
+/* ---------------- SERVICE SCROLL SLIDER (FINAL REVISION 3) ---------------- */
 
 function initServiceSlider() {
+  const serviceAnchor = document.getElementById("service-scroll-anchor");
   const serviceSection = document.getElementById("service");
   const serviceContainer = document.getElementById("service-container");
-  const scrollWrapper = document.getElementById("service-scroll-wrapper"); // New element for virtual space
-
-  if (!serviceSection || !serviceContainer || !scrollWrapper) return;
+  if (!serviceAnchor || !serviceSection || !serviceContainer) return;
 
   const slides = Array.from(
     serviceContainer.querySelectorAll(".service-slide")
@@ -46,103 +45,70 @@ function initServiceSlider() {
   if (!slides.length) return;
 
   const totalSlides = slides.length;
-  // We need N-1 transitions to go through N slides
-  const numTransitions = totalSlides - 1; 
-  const viewportHeight = window.innerHeight;
-  
-  // Set the required "virtual" scroll space height. Each slide transition needs 1 viewport height of scroll.
-  // We'll use 200vh per transition to make it require more scroll input.
-  const transitionScrollHeight = 2 * viewportHeight; 
-  const totalVirtualScrollHeight = numTransitions * transitionScrollHeight;
+  let currentIndex = 0;
+  let isTransitioning = false;
 
-  // The scroll wrapper creates the required vertical space for pinning
-  scrollWrapper.style.height = `${totalVirtualScrollHeight + viewportHeight}px`; // Add 1vh to fully show the last slide
+  const transitionDuration = 400; // ms
+  const stickyTop = 0.06 * window.innerHeight; // 6vh in px
+  const scrollDistancePerSlide = window.innerHeight * 0.8;
+  const scrollLifeHeight = totalSlides * scrollDistancePerSlide;
 
-  let pinStartScroll; // The scroll position where the service section hits the top
+  // Container height = section height + scroll distance for all slides
+  const serviceHeight = serviceSection.offsetHeight || window.innerHeight;
+  serviceAnchor.style.minHeight = `${serviceHeight + scrollLifeHeight}px`;
 
-  // 1. Initial setup to get pin start position
-  function setupPinStart() {
-    // The scroll position when the service section's top aligns with the sticky point (6vh)
-    const stickyOffset = 0.06 * viewportHeight; // The top offset from CSS (6vh)
-    pinStartScroll = serviceSection.offsetTop - stickyOffset;
-  }
-
-  // Run once and on resize
-  setupPinStart();
-  window.addEventListener('resize', setupPinStart);
-
-
-  // 2. Main scroll listener for transitions
-  function handlePinScroll() {
-    const currentScroll = window.scrollY || window.pageYOffset;
-
-    // Check if we are inside the pinned section's scroll range
-    if (currentScroll >= pinStartScroll && currentScroll < pinStartScroll + totalVirtualScrollHeight) {
-      // The section is pinned, calculate internal slide transition
-      
-      // The amount the user has scrolled since the section was pinned
-      const internalScroll = currentScroll - pinStartScroll;
-
-      // Which transition are we in? (e.g., 0 for slide 1->2, 1 for slide 2->3)
-      const transitionIndex = Math.floor(internalScroll / transitionScrollHeight);
-      
-      // Calculate progress within the current transition (0 to 1)
-      const progress = (internalScroll % transitionScrollHeight) / transitionScrollHeight;
-
-      // Determine the two slides involved in the transition
-      const currentIndex = transitionIndex;
-      const nextIndex = transitionIndex + 1;
-      
-      setSlideOpacities(currentIndex, nextIndex, progress);
-
-    } else if (currentScroll < pinStartScroll) {
-      // Before the pinned section: show first slide fully
-      setSlideOpacities(0, 1, 0);
-
-    } else if (currentScroll >= pinStartScroll + totalVirtualScrollHeight) {
-      // After the pinned section: show last slide fully
-      setSlideOpacities(totalSlides - 1, totalSlides, 1);
-    }
-  }
-
-  
-  // 3. Function to update slide opacities based on progress
-  function setSlideOpacities(fromIndex, toIndex, progress) {
-    // Ensure progress is clamped
-    progress = Math.min(Math.max(progress, 0), 1);
-    
-    // Reset all slides
-    slides.forEach(slide => {
-      slide.style.opacity = 0;
-      slide.style.pointerEvents = 'none';
-      slide.classList.remove('is-current');
+  function applySlideState() {
+    slides.forEach((slide, idx) => {
+      const isActive = idx === currentIndex;
+      slide.style.opacity = isActive ? 1 : 0;
+      slide.style.pointerEvents = isActive ? "auto" : "none";
+      slide.classList.toggle("is-current", isActive);
     });
-
-    // Fade out the current slide (fromIndex)
-    if (slides[fromIndex]) {
-      const fromOpacity = 1 - progress;
-      slides[fromIndex].style.opacity = fromOpacity;
-      slides[fromIndex].style.pointerEvents = fromOpacity > 0.01 ? 'auto' : 'none';
-      if (fromOpacity > 0.5) slides[fromIndex].classList.add('is-current');
-    }
-
-    // Fade in the next slide (toIndex)
-    if (slides[toIndex]) {
-      slides[toIndex].style.opacity = progress;
-      slides[toIndex].style.pointerEvents = progress > 0.01 ? 'auto' : 'none';
-      if (progress > 0.5) slides[toIndex].classList.add('is-current');
-    }
-
-    // After the final transition (when progress is 1 for the last slide), 
-    // we need to make sure the last slide is fully visible.
-    if (progress === 1 && toIndex === totalSlides - 1) {
-       slides[totalSlides - 1].style.opacity = 1;
-       slides[totalSlides - 1].style.pointerEvents = 'auto';
-       slides[totalSlides - 1].classList.add('is-current');
-    }
   }
 
+  function setSlide(nextIndex) {
+    if (nextIndex === currentIndex || isTransitioning) return;
+    isTransitioning = true;
+    currentIndex = nextIndex;
+    applySlideState();
+    setTimeout(() => {
+      isTransitioning = false;
+    }, transitionDuration);
+  }
 
-  window.addEventListener("scroll", handlePinScroll);
-  handlePinScroll(); // Initial call
+  // initial
+  applySlideState();
+
+  function handleScroll() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    const anchorTop = serviceAnchor.offsetTop;
+
+    // point where the section “locks” at 6vh
+    const startScroll = anchorTop - stickyTop;
+    // point where the slider life ends (after 3 states)
+    const endScroll = startScroll + scrollLifeHeight;
+
+    // 1) BEFORE service: show first state
+    if (scrollY < startScroll) {
+      if (currentIndex !== 0) setSlide(0);
+      return;
+    }
+
+    // 2) AFTER service: keep last state visible while it scrolls away
+    if (scrollY >= endScroll) {
+      if (currentIndex !== totalSlides - 1) setSlide(totalSlides - 1);
+      return;
+    }
+
+    // 3) INSIDE service scroll-life: switch between states
+    const progress = scrollY - startScroll;
+    let targetIndex = Math.floor(progress / scrollDistancePerSlide);
+    if (targetIndex < 0) targetIndex = 0;
+    if (targetIndex > totalSlides - 1) targetIndex = totalSlides - 1;
+
+    setSlide(targetIndex);
+  }
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
 }
