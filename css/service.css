@@ -1,16 +1,10 @@
-/* css/service.css */
 
-/* --- Pinning and Container Setup --- */
-/* REMOVED position: sticky; from #service */
 #service {
-  /* STICKY instead of JS pinning */
   position: sticky;
   top: 6vh;
   padding-top: 2vh;
   min-height: 90dvh;
   width: 100%;
-    touch-action: pan-y;         
-  overscroll-behavior: contain;
   z-index: 10;
   background-color: #f8f8f8;
 }
@@ -21,8 +15,11 @@
 #service h2 {
   font-family: var(--font-title);
   letter-spacing: 2px;
-  padding-left: 5vw;
-  
+  padding-left: 1vw;
+  display: inline-block ;
+  margin-left: 5vw;
+  font-size: 3.5vh;
+  border-bottom: 1px solid #2c2d31e5;
 }
 
 /* Container that holds all slides */

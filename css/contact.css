@@ -1,13 +1,208 @@
-/* css/contact.css */
+/* ----------------------------- */
+/* CONTACT SECTION               */
+/* ----------------------------- */
 
-/* Contact section */
-section:nth-of-type(6) h2,
-section#contact h2 {
+#contact h2 {
   font-family: var(--font-title);
   letter-spacing: 2px;
-  padding-left: 5vw;
-  margin-top: 3vh;
-  margin-bottom: 2vh;
+  padding-left: 1vw;
+  margin: 3vh 0 2vh 0;
+  font-size: 3.5vh;
+  margin-left: 5vw;
+  margin-bottom: 4vh;
+  display: inline-block;
+  border-bottom: 1px solid #2c2d31e5;
+  color: #2c2d31;
 }
 
-/* Add more contact styles here later */
+#contact {
+  margin: 2vh 0 3vh 0;
+}
+
+.contact-inner {
+  padding: 0 5vw 3vh 5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+/* ----------------------------- */
+/* CONTACT FORM                  */
+/* ----------------------------- */
+
+.contact-form {
+  padding: 2.5vh 4vw;
+  border: 1px solid #2c2d31ad;
+  border-radius: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  margin-bottom: 1.8vh;
+}
+
+.form-group label {
+  font-family: var(--font-body);
+  font-size: 1.7vh;
+  color: #2c2d31;
+  padding-left: 4vw;
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: var(--font-body);
+  font-size: 1.7vh;
+  padding: 1.2vh 4vw;
+  background: #f8f8f8;
+  color: #2c2d31;
+  border: none;
+  border-radius: 12px;
+  outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #2c2d3199;
+}
+
+.contact-submit {
+  margin-top: 1vh;
+  padding: 1.5vh 3vw;
+  background: #2c2d31;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 1.8vh;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* ----------------------------- */
+/* CONTACT INFO (RIGHT SIDE)     */
+/* ----------------------------- */
+
+.contact-info {
+  padding: 2.5vh 6vw;
+  border: 1px solid #2c2d31ad;
+  border-radius: 12px;
+}
+
+.contact-info h3 {
+  font-family: var(--font-title);
+  font-size: 2.5vh;
+  padding-left: 3vw;
+  margin-bottom: 1.5vh;
+  border-bottom: 1px solid #2c2d31c6;
+  padding-bottom: 0.5vh;
+  color: #2c2d31;
+}
+
+/* ----------------------------- */
+/* CLICKABLE CONTACT TILES       */
+/* ----------------------------- */
+
+.contact-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  margin: 1.8vh 0;
+}
+
+.contact-tiles .tile {
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+  padding: 1.5vh 2vw;
+  text-decoration: none;
+  color: #2c2d31;
+  
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1.7vh;
+  transition: background 0.2s ease;
+}
+
+.contact-tiles .tile i {
+  font-size: 3vh;
+}
+
+
+
+/* ----------------------------- */
+/* LEGAL LINKS                   */
+/* ----------------------------- */
+
+.legal-links {
+  margin-top: 2vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.legal-links a {
+  font-family: var(--font-body);
+  font-size: 2vh;
+  color: #2c2d31;
+  text-decoration: none;
+  opacity: 1;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.legal-links a:hover {
+  opacity: 1;
+}
+
+/* ----------------------------- */
+/* SOCIAL ICONS                  */
+/* ----------------------------- */
+
+.contact-socials {
+  margin-top: 2vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  align-items: center;
+}
+
+.contact-socials span {
+  font-family: var(--font-body);
+  font-size: 2.2vh;
+  color: #2c2d31;
+  width: 50%;
+  padding-bottom: 1vh;
+  text-align: center;
+  display: block;
+  border-bottom: 1px solid #2c2d3199;
+}
+
+.contact-social-icons {
+  display: flex;
+  gap: 8vw;
+  justify-content: center;
+}
+
+.contact-social-icons a {
+  font-size: 3vh;
+  color: #2c2d31;
+}
+
+/* ----------------------------- */
+/* COPYRIGHT STRIP               */
+/* ----------------------------- */
+
+.copyright-strip {
+  background: #2c2d31;
+  padding: 1.5vh 5vw;
+  text-align: center;
+}
+
+.copyright-strip p {
+  font-family: var(--font-body);
+  font-size: 1.6vh;
+  color: #ffffff;
+}
