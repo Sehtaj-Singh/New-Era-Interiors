@@ -33,6 +33,8 @@ function initHeaderFade() {
 
 /* ---------------- SERVICE SCROLL SLIDER (FINAL REVISION 3) ---------------- */
 
+
+
 function initServiceSlider() {
   const serviceAnchor = document.getElementById("service-scroll-anchor");
   const serviceSection = document.getElementById("service");
