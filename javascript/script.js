@@ -119,16 +119,12 @@ function initServiceSlider() {
     changeSlide(direction);
   }
 
-  /* ------------ MOBILE: TOUCH SWIPE (1 swipe = 1 slide) ------------ */
+  /* ------------ MOBILE: TOUCH SWIPE (1 swipe = 1 slide, NO eject in same swipe) ------------ */
   let touchStartY = 0;
-  let touchGestureUsed = false; // ensure only one slide per gesture
+  let touchGestureUsed = false; // whether this gesture already triggered a slide
 
   function handleTouchStart(e) {
-    if (!inServiceRange) {
-      touchGestureUsed = false;
-      return;
-    }
-
+    // Always reset for a new gesture
     const touch = e.touches[0];
     touchStartY = touch.clientY;
     touchGestureUsed = false;
@@ -136,41 +132,43 @@ function initServiceSlider() {
 
   function handleTouchMove(e) {
     if (!inServiceRange) return;
-    if (touchGestureUsed) return;
-    if (isTransitioning) return;
 
     const touch = e.touches[0];
     const currentY = touch.clientY;
+    const gestureDelta = touchStartY - currentY; // >0 = swipe up, <0 = swipe down
+    const threshold = 30; // px before we treat as a swipe
 
-    // gestureDelta > 0  => swipe up  (scroll down)
-    // gestureDelta < 0  => swipe down (scroll up)
-    const gestureDelta = touchStartY - currentY;
-    const threshold = 30; // px before we trigger a slide
-
-    if (Math.abs(gestureDelta) < threshold) return;
-
-    // First slide: swipe down = go back up (let page scroll normally)
-    if (gestureDelta < 0 && currentIndex === 0) {
-      touchGestureUsed = true; // avoid multiple triggers for same gesture
+    // ✅ If this gesture already changed a slide, keep blocking scroll
+    // so a long hard swipe cannot also eject you.
+    if (touchGestureUsed) {
+      if (e.cancelable) e.preventDefault();
       return;
     }
 
-    // Last slide: swipe up = exit to next section (let page scroll normally)
+    if (Math.abs(gestureDelta) < threshold) return;
+
+    // At first slide + swipe down (scroll up) → allow exit (no preventDefault)
+    if (gestureDelta < 0 && currentIndex === 0) {
+      touchGestureUsed = true; // don't double-process this gesture
+      return;
+    }
+
+    // At last slide + swipe up (scroll down) → allow exit (no preventDefault)
     if (gestureDelta > 0 && currentIndex === totalSlides - 1) {
       touchGestureUsed = true;
       return;
     }
 
-    // Otherwise: we are inside the slider → hijack and change slide
+    // Otherwise: inside slider (1 → 2 → 3 or reverse)
+    // ➜ hijack scroll and move EXACTLY one slide
     if (e.cancelable) e.preventDefault();
-
     const direction = gestureDelta > 0 ? 1 : -1; // up = next, down = previous
     changeSlide(direction);
     touchGestureUsed = true;
   }
 
   function handleTouchEnd() {
-    // reset flags for next gesture
+    // After finger is lifted, next swipe is a new gesture
     touchGestureUsed = false;
   }
 
