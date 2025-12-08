@@ -47,68 +47,89 @@ function initServiceSlider() {
   const totalSlides = slides.length;
   let currentIndex = 0;
   let isTransitioning = false;
+  let inServiceRange = false; // are we inside the sticky “life” of this section?
 
-  const transitionDuration = 400; // ms
-  const stickyTop = 0.06 * window.innerHeight; // 6vh in px
+  const transitionDuration = 400; // ms (fade duration)
+  const stickyTop = window.innerHeight * 0.06; // must match CSS top: 6vh;
+
+  // how much scroll distance we allocate for the service “life”
   const scrollDistancePerSlide = window.innerHeight * 0.8;
   const scrollLifeHeight = totalSlides * scrollDistancePerSlide;
 
-  // Container height = section height + scroll distance for all slides
-  const serviceHeight = serviceSection.offsetHeight || window.innerHeight;
-  serviceAnchor.style.minHeight = `${serviceHeight + scrollLifeHeight}px`;
+  // make the anchor tall enough so the page can scroll past the sticky section
+  const sectionHeight = serviceSection.offsetHeight || window.innerHeight;
+  serviceAnchor.style.minHeight = `${sectionHeight + scrollLifeHeight}px`;
 
-  function applySlideState() {
+  /* ---------- SLIDE VISIBILITY ---------- */
+  function applySlides() {
     slides.forEach((slide, idx) => {
-      const isActive = idx === currentIndex;
-      slide.style.opacity = isActive ? 1 : 0;
-      slide.style.pointerEvents = isActive ? "auto" : "none";
-      slide.classList.toggle("is-current", isActive);
+      const active = idx === currentIndex;
+      slide.style.opacity = active ? 1 : 0;
+      slide.style.pointerEvents = active ? "auto" : "none";
+      slide.classList.toggle("is-current", active);
     });
-  }
 
-  function setSlide(nextIndex) {
-    if (nextIndex === currentIndex || isTransitioning) return;
-    isTransitioning = true;
-    currentIndex = nextIndex;
-    applySlideState();
+    // unlock new slide change after fade
     setTimeout(() => {
       isTransitioning = false;
     }, transitionDuration);
   }
 
-  // initial
-  applySlideState();
+  function changeSlide(direction) {
+    if (isTransitioning) return;
 
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= totalSlides) return;
+
+    isTransitioning = true;
+    currentIndex = nextIndex;
+    applySlides();
+  }
+
+  // initial state
+  applySlides();
+
+  /* ---------- DETECT WHEN WE ARE IN SERVICE RANGE ---------- */
   function handleScroll() {
     const scrollY = window.scrollY || window.pageYOffset;
     const anchorTop = serviceAnchor.offsetTop;
 
-    // point where the section “locks” at 6vh
-    const startScroll = anchorTop - stickyTop;
-    // point where the slider life ends (after 3 states)
-    const endScroll = startScroll + scrollLifeHeight;
+    // point where #service sticks at 6vh
+    const startPin = anchorTop - stickyTop;
+    // end of the artificial scroll-life
+    const endPin = startPin + scrollLifeHeight;
 
-    // 1) BEFORE service: show first state
-    if (scrollY < startScroll) {
-      if (currentIndex !== 0) setSlide(0);
-      return;
+    inServiceRange = scrollY >= startPin && scrollY < endPin;
+  }
+
+  /* ---------- WHEEL: ONE SCROLL = ONE SLIDE ---------- */
+  function handleWheel(e) {
+    if (!inServiceRange) return; // outside our zone, let browser scroll normally
+
+    const deltaY = e.deltaY;
+    if (deltaY === 0) return;
+
+    // At first slide, scrolling UP: let user leave to previous section
+    if (deltaY < 0 && currentIndex === 0) {
+      return; // do NOT preventDefault → normal scroll up
     }
 
-    // 2) AFTER service: keep last state visible while it scrolls away
-    if (scrollY >= endScroll) {
-      if (currentIndex !== totalSlides - 1) setSlide(totalSlides - 1);
-      return;
+    // At last slide, scrolling DOWN: let user leave to next section
+    if (deltaY > 0 && currentIndex === totalSlides - 1) {
+      return; // do NOT preventDefault → normal scroll down
     }
 
-    // 3) INSIDE service scroll-life: switch between states
-    const progress = scrollY - startScroll;
-    let targetIndex = Math.floor(progress / scrollDistancePerSlide);
-    if (targetIndex < 0) targetIndex = 0;
-    if (targetIndex > totalSlides - 1) targetIndex = totalSlides - 1;
+    // Otherwise we are between states → hijack scroll and step exactly 1 slide
+    if (e.cancelable) e.preventDefault();
+    if (isTransitioning) return;
 
-    setSlide(targetIndex);
+    const direction = deltaY > 0 ? 1 : -1; // down = next, up = previous
+    changeSlide(direction);
   }
 
   window.addEventListener("scroll", handleScroll);
+  // passive:false so we can preventDefault and stop the “long hard” scroll
+  window.addEventListener("wheel", handleWheel, { passive: false });
+
   handleScroll();
 }
