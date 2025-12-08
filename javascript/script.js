@@ -47,20 +47,19 @@ function initServiceSlider() {
   const totalSlides = slides.length;
   let currentIndex = 0;
   let isTransitioning = false;
-  let inServiceRange = false; // are we inside the sticky “life” of this section?
+  let inServiceRange = false; // are we inside the slider zone?
 
-  const transitionDuration = 400; // ms (fade duration)
-  const stickyTop = window.innerHeight * 0.06; // must match CSS top: 6vh;
+  const transitionDuration = 400; // ms
+  const stickyTop = window.innerHeight * 0.06; // must match CSS top: 6vh
 
-  // how much scroll distance we allocate for the service “life”
+  // how long the “life” of this sticky section is in scroll distance
   const scrollDistancePerSlide = window.innerHeight * 0.8;
   const scrollLifeHeight = totalSlides * scrollDistancePerSlide;
 
-  // make the anchor tall enough so the page can scroll past the sticky section
   const sectionHeight = serviceSection.offsetHeight || window.innerHeight;
   serviceAnchor.style.minHeight = `${sectionHeight + scrollLifeHeight}px`;
 
-  /* ---------- SLIDE VISIBILITY ---------- */
+  /* ------------ SLIDE VISIBILITY ------------ */
   function applySlides() {
     slides.forEach((slide, idx) => {
       const active = idx === currentIndex;
@@ -69,7 +68,6 @@ function initServiceSlider() {
       slide.classList.toggle("is-current", active);
     });
 
-    // unlock new slide change after fade
     setTimeout(() => {
       isTransitioning = false;
     }, transitionDuration);
@@ -86,50 +84,103 @@ function initServiceSlider() {
     applySlides();
   }
 
-  // initial state
+  // init
   applySlides();
 
-  /* ---------- DETECT WHEN WE ARE IN SERVICE RANGE ---------- */
+  /* ------------ SCROLL RANGE DETECTION (for sticky life) ------------ */
   function handleScroll() {
     const scrollY = window.scrollY || window.pageYOffset;
     const anchorTop = serviceAnchor.offsetTop;
 
-    // point where #service sticks at 6vh
     const startPin = anchorTop - stickyTop;
-    // end of the artificial scroll-life
     const endPin = startPin + scrollLifeHeight;
 
     inServiceRange = scrollY >= startPin && scrollY < endPin;
   }
 
-  /* ---------- WHEEL: ONE SCROLL = ONE SLIDE ---------- */
+  /* ------------ DESKTOP: WHEEL (1 scroll = 1 slide) ------------ */
   function handleWheel(e) {
-    if (!inServiceRange) return; // outside our zone, let browser scroll normally
+    if (!inServiceRange) return;
 
     const deltaY = e.deltaY;
     if (deltaY === 0) return;
 
-    // At first slide, scrolling UP: let user leave to previous section
-    if (deltaY < 0 && currentIndex === 0) {
-      return; // do NOT preventDefault → normal scroll up
-    }
+    // at first slide + scroll up → let page move naturally
+    if (deltaY < 0 && currentIndex === 0) return;
 
-    // At last slide, scrolling DOWN: let user leave to next section
-    if (deltaY > 0 && currentIndex === totalSlides - 1) {
-      return; // do NOT preventDefault → normal scroll down
-    }
+    // at last slide + scroll down → let page move naturally
+    if (deltaY > 0 && currentIndex === totalSlides - 1) return;
 
-    // Otherwise we are between states → hijack scroll and step exactly 1 slide
+    // otherwise: hijack scroll and move exactly one slide
     if (e.cancelable) e.preventDefault();
     if (isTransitioning) return;
 
-    const direction = deltaY > 0 ? 1 : -1; // down = next, up = previous
+    const direction = deltaY > 0 ? 1 : -1;
     changeSlide(direction);
   }
 
+  /* ------------ MOBILE: TOUCH SWIPE (1 swipe = 1 slide) ------------ */
+  let touchStartY = 0;
+  let touchGestureUsed = false; // ensure only one slide per gesture
+
+  function handleTouchStart(e) {
+    if (!inServiceRange) {
+      touchGestureUsed = false;
+      return;
+    }
+
+    const touch = e.touches[0];
+    touchStartY = touch.clientY;
+    touchGestureUsed = false;
+  }
+
+  function handleTouchMove(e) {
+    if (!inServiceRange) return;
+    if (touchGestureUsed) return;
+    if (isTransitioning) return;
+
+    const touch = e.touches[0];
+    const currentY = touch.clientY;
+
+    // gestureDelta > 0  => swipe up  (scroll down)
+    // gestureDelta < 0  => swipe down (scroll up)
+    const gestureDelta = touchStartY - currentY;
+    const threshold = 30; // px before we trigger a slide
+
+    if (Math.abs(gestureDelta) < threshold) return;
+
+    // First slide: swipe down = go back up (let page scroll normally)
+    if (gestureDelta < 0 && currentIndex === 0) {
+      touchGestureUsed = true; // avoid multiple triggers for same gesture
+      return;
+    }
+
+    // Last slide: swipe up = exit to next section (let page scroll normally)
+    if (gestureDelta > 0 && currentIndex === totalSlides - 1) {
+      touchGestureUsed = true;
+      return;
+    }
+
+    // Otherwise: we are inside the slider → hijack and change slide
+    if (e.cancelable) e.preventDefault();
+
+    const direction = gestureDelta > 0 ? 1 : -1; // up = next, down = previous
+    changeSlide(direction);
+    touchGestureUsed = true;
+  }
+
+  function handleTouchEnd() {
+    // reset flags for next gesture
+    touchGestureUsed = false;
+  }
+
   window.addEventListener("scroll", handleScroll);
-  // passive:false so we can preventDefault and stop the “long hard” scroll
   window.addEventListener("wheel", handleWheel, { passive: false });
+
+  // touch for mobile
+  window.addEventListener("touchstart", handleTouchStart, { passive: true });
+  window.addEventListener("touchmove", handleTouchMove, { passive: false });
+  window.addEventListener("touchend", handleTouchEnd, { passive: true });
 
   handleScroll();
 }
