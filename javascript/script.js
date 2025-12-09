@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initServiceSlider();
 });
 
-/* ---------------- HEADER FADE (Kept as is) ---------------- */
-
+/* ---------------- HEADER FADE (KEPT AS IS) ---------------- */
 function initHeaderFade() {
   const header = document.getElementById("site-header");
   const heroTitle = document.querySelector(".intro h1");
@@ -31,7 +30,8 @@ function initHeaderFade() {
   handleHeaderScroll();
 }
 
-/* ---------------- SERVICE SCROLL SLIDER (FINAL EJECTION LOGIC) ---------------- */
+
+/* ---------------- SERVICE SCROLL SLIDER (REVISED) ---------------- */
 
 function initServiceSlider() {
   const serviceAnchor = document.getElementById("service-scroll-anchor");
@@ -47,12 +47,12 @@ function initServiceSlider() {
   const totalSlides = slides.length;
   let currentIndex = 0;
   let isTransitioning = false;
-  let inServiceRange = false; // are we inside the slider zone?
+  let inServiceRange = false; // inside sticky "life" of section?
 
   const transitionDuration = 400; // ms
-  const stickyTop = window.innerHeight * 0.06; // must match CSS top: 6vh
+  const stickyTop = window.innerHeight * 0.06; // CSS top: 6vh
 
-  // Set a large scrollable height for the illusion of sticky scroll
+  // how long this section stays in sticky mode
   const scrollDistancePerSlide = window.innerHeight * 0.8;
   const scrollLifeHeight = totalSlides * scrollDistancePerSlide;
 
@@ -74,21 +74,20 @@ function initServiceSlider() {
   }
 
   function changeSlide(direction) {
-    if (isTransitioning) return false;
+    if (isTransitioning) return;
 
     const nextIndex = currentIndex + direction;
-    if (nextIndex < 0 || nextIndex >= totalSlides) return false;
+    if (nextIndex < 0 || nextIndex >= totalSlides) return;
 
     isTransitioning = true;
     currentIndex = nextIndex;
     applySlides();
-    return true; // Slide was changed
   }
 
   // init
   applySlides();
 
-  /* ------------ SCROLL RANGE DETECTION (for sticky life) ------------ */
+  /* ------------ RANGE DETECTION (sticky life) ------------ */
   function handleScroll() {
     const scrollY = window.scrollY || window.pageYOffset;
     const anchorTop = serviceAnchor.offsetTop;
@@ -99,89 +98,115 @@ function initServiceSlider() {
     inServiceRange = scrollY >= startPin && scrollY < endPin;
   }
 
-  /* ------------ DESKTOP: WHEEL (Hijack scroll or Eject) ------------ */
+  /* ------------ DESKTOP: WHEEL (1 scroll = 1 slide) ------------ */
   function handleWheel(e) {
     if (!inServiceRange) return;
 
     const deltaY = e.deltaY;
     if (deltaY === 0) return;
 
-    // SCROLL UP (deltaY < 0)
-    if (deltaY < 0) {
-      if (currentIndex === 0) {
-        // Eject Up: Allow browser scroll
-        return;
-      }
-      // Internal transition: Disable scroll, change slide
-      if (e.cancelable) e.preventDefault();
-      changeSlide(-1);
+    // first slide + scroll up → allow natural exit
+    if (deltaY < 0 && currentIndex === 0) return;
 
-    // SCROLL DOWN (deltaY > 0)
-    } else if (deltaY > 0) {
-      if (currentIndex === totalSlides - 1) {
-        // Eject Down: Allow browser scroll
-        return;
-      }
-      // Internal transition: Disable scroll, change slide
-      if (e.cancelable) e.preventDefault();
-      changeSlide(1);
-    }
+    // last slide + scroll down → allow natural exit
+    if (deltaY > 0 && currentIndex === totalSlides - 1) return;
+
+    if (e.cancelable) e.preventDefault();
+    if (isTransitioning) return;
+
+    const direction = deltaY > 0 ? 1 : -1;
+    changeSlide(direction);
   }
 
-  /* ------------ MOBILE: TOUCH SWIPE (Hijack scroll or Eject) ------------ */
+  /* ------------ MOBILE: TOUCH (no momentum) ------------ */
+
   let touchStartY = 0;
-  let touchMoved = false; // Only process one slide change per swipe gesture
+  let gestureHandled = false;   // slide change or exit already decided
+  let pendingExit = 0;          // -1 = exit up, +1 = exit down
 
   function handleTouchStart(e) {
     const touch = e.touches[0];
     touchStartY = touch.clientY;
-    touchMoved = false; // Reset for a new gesture
+    gestureHandled = false;
+    pendingExit = 0;
   }
 
   function handleTouchMove(e) {
-    if (!inServiceRange || isTransitioning) return;
+    if (!inServiceRange) return;
 
     const touch = e.touches[0];
     const currentY = touch.clientY;
-    const gestureDelta = touchStartY - currentY; // >0 = swipe up (scroll down), <0 = swipe down (scroll up)
-    const threshold = 30; // px before we treat as a swipe
+    const delta = touchStartY - currentY; // >0 swipe up (scroll down), <0 swipe down
 
-    if (Math.abs(gestureDelta) < threshold) return;
+    const threshold = 30; // px
 
-    // Process the swipe action only once
-    if (!touchMoved) {
-        touchMoved = true;
+    // ❗ While in service range, ALWAYS block native scroll → no momentum at all
+    if (e.cancelable) e.preventDefault();
 
-        const direction = gestureDelta > 0 ? 1 : -1; // up swipe = next slide (1), down swipe = previous slide (-1)
+    if (gestureHandled || isTransitioning) return;
+    if (Math.abs(delta) < threshold) return;
 
-        // Ejection Check
-        if (direction === 1 && currentIndex === totalSlides - 1) {
-            // Eject Down: At last slide, swiping up (down scroll)
-            return;
-        } else if (direction === -1 && currentIndex === 0) {
-            // Eject Up: At first slide, swiping down (up scroll)
-            return;
-        }
-        
-        // Internal Transition: Disable scroll, change slide
-        if (e.cancelable) e.preventDefault();
-        changeSlide(direction);
-
+    // swipe up
+    if (delta > 0) {
+      if (currentIndex < totalSlides - 1) {
+        // go to next slide (1→2→3…)
+        changeSlide(1);
+        gestureHandled = true;
+      } else {
+        // last slide and user swiped up → mark exit DOWN
+        pendingExit = 1;
+        gestureHandled = true;
+      }
     } else {
-        // Block native scroll for the remainder of the active swipe gesture
-        if (e.cancelable) e.preventDefault();
+      // swipe down
+      if (currentIndex > 0) {
+        // go to previous slide (3→2→1…)
+        changeSlide(-1);
+        gestureHandled = true;
+      } else {
+        // first slide and user swiped down → mark exit UP
+        pendingExit = -1;
+        gestureHandled = true;
+      }
     }
   }
 
   function handleTouchEnd() {
-    touchMoved = false;
+    if (!inServiceRange && pendingExit === 0) {
+      // nothing special
+      gestureHandled = false;
+      return;
+    }
+
+    if (pendingExit !== 0) {
+      // Now perform the EXIT with a manual scroll (no momentum).
+      const scrollY = window.scrollY || window.pageYOffset;
+      const anchorTop = serviceAnchor.offsetTop;
+      const startPin = anchorTop - stickyTop;
+      const endPin = startPin + scrollLifeHeight;
+
+      let target;
+      if (pendingExit === -1) {
+        // exit UP (to previous section)
+        target = startPin - 10;
+      } else {
+        // exit DOWN (to next section)
+        target = endPin + 10;
+      }
+
+      window.scrollTo({
+        top: target,
+        behavior: "smooth"
+      });
+    }
+
+    gestureHandled = false;
+    pendingExit = 0;
   }
 
   window.addEventListener("scroll", handleScroll);
-  // Must be non-passive to allow e.preventDefault()
   window.addEventListener("wheel", handleWheel, { passive: false });
 
-  // Touch for mobile. touchstart/touchend can be passive. touchmove must be non-passive.
   window.addEventListener("touchstart", handleTouchStart, { passive: true });
   window.addEventListener("touchmove", handleTouchMove, { passive: false });
   window.addEventListener("touchend", handleTouchEnd, { passive: true });
