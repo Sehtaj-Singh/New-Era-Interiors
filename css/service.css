@@ -117,3 +117,7 @@
   padding: 1vh 2vw;
   font-size: 4vw;
 }
+/* Make sure the wrapper has at least the section height */
+#service-scroll-anchor {
+  position: relative;
+}
